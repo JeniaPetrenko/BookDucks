@@ -1,0 +1,156 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+}
+
+#welcome-page {
+    display: none;
+}
+
+
+
+#mainBooksPage,
+.main-inloggde {
+    width: 100%;
+}
+
+#books-list,
+#book-details {
+    margin: 2em 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 1em 0;
+    padding: 1em;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* ----- style for main ----- */
+.main-container {
+    flex: 1;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.main-container-inloggde {
+    background-color: rgba(0, 0, 0, 1);
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.main-inloggning {
+    background: rgba(255, 255, 255, 0.9);
+    order: 0.5px solid gray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 30px;
+    width: 370px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-weight: 300;
+}
+
+.login_title {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+input {
+    width: 60%;
+    height: 40px;
+    margin: 20px 0;
+    border-radius: 15px;
+    text-align: center;
+}
+
+div.main-inloggning>div>button {
+    font-size: 1rem;
+    border: none;
+    margin: 2rem 0.6rem;
+    background: none;
+    width: 150px;
+    height: 50px;
+}
+
+#login {
+    border-bottom: 2px solid rgb(26, 6, 6);
+}
+
+
+#userPageBtn,
+#loginBtn,
+#registerBtn #logoutBtn,
+#registerBtn,
+#backToAllBooksBtn {
+    background: lightgray;
+    width: 60%;
+    height: 40px;
+    border: none;
+    border-radius: 99px;
+    margin: 20px 0;
+}
+
+#loginBtn:hover,
+#registerBtn:hover,
+#logoutBtn:hover {
+    background: rgb(66, 61, 61);
+    color: white;
+    cursor: pointer;
+}
+
+.main-inloggde {
+    background: rgba(255, 255, 255, 1);
+    border-radius: 20px;
+    padding: 5%;
+    min-width: 40%;
+    max-width: 70%;
+    height: 10%;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    margin: 15% 0;
+}
