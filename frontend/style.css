@@ -1,15 +1,10 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
 }
 
 header {
-    background-color: #333;
+    background-color: #413f3f;
     color: #fff;
     padding: 1em;
     text-align: center;
@@ -21,7 +16,7 @@ nav {
     gap: 1em;
 }
 
-main {
+#main {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -33,103 +28,109 @@ main {
     display: none;
 }
 
-
-
-#mainBooksPage,
-.main-inloggde {
-    width: 100%;
-}
-
 #books-list,
 #book-details {
-    margin: 2em 0;
+    margin: 20px;
+    gap: 10px;
+    display: block;
+    flex-direction: column;
 }
 
 ul {
     list-style: none;
     padding: 0;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+
+
 }
+
+
 
 li {
     margin: 1em 0;
     padding: 1em;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    max-width: 200px;
+    max-height: 400px;
+    margin: 10px;
 }
 
 
 
-/* ----- style for main ----- */
-.main-container {
-    flex: 1;
-    background-size: cover;
-    background-repeat: no-repeat;
+
+/* Add this to your existing CSS file or a new one */
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.main-container-inloggde {
-    background-color: rgba(0, 0, 0, 1);
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
+#inlogning-container {
+    background-color: rgb(61, 50, 50);
+
 }
 
-.main-inloggning {
-    background: rgba(255, 255, 255, 0.9);
-    order: 0.5px solid gray;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+#login-section,
+#register-section {
+    background: rgba(198, 126, 126, 0.985);
+    border: 0.5px solid gray;
     border-radius: 20px;
-    padding: 30px;
-    width: 370px;
+    padding: 5px;
+    margin: 10px;
+    width: 250px;
+    height: 300px;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+
+
+
 h1 {
-    margin: 0;
+    margin: 5px;
     font-weight: 300;
 }
 
-.login_title {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    gap: 10px;
+h2 {
+    text-align: center;
 }
 
 input {
     width: 60%;
-    height: 40px;
-    margin: 20px 0;
+    height: 30px;
+    margin: 10px 0;
     border-radius: 15px;
     text-align: center;
 }
 
-div.main-inloggning>div>button {
-    font-size: 1rem;
-    border: none;
-    margin: 2rem 0.6rem;
-    background: none;
-    width: 150px;
-    height: 50px;
-}
+
 
 #login {
     border-bottom: 2px solid rgb(26, 6, 6);
 }
 
+#logoutBtn,
+#myListBtn {
+    background: lightgray;
+    width: 50%;
+    height: 40px;
+    border: none;
+    border-radius: 99px;
+    margin: 20px 0;
+}
 
 #userPageBtn,
 #loginBtn,
-#registerBtn #logoutBtn,
 #registerBtn,
 #backToAllBooksBtn {
     background: lightgray;
-    width: 60%;
+    width: 70%;
     height: 40px;
     border: none;
     border-radius: 99px;
@@ -138,19 +139,9 @@ div.main-inloggning>div>button {
 
 #loginBtn:hover,
 #registerBtn:hover,
-#logoutBtn:hover {
+#logoutBtn:hover,
+#myListBtn:hover {
     background: rgb(66, 61, 61);
     color: white;
     cursor: pointer;
-}
-
-.main-inloggde {
-    background: rgba(255, 255, 255, 1);
-    border-radius: 20px;
-    padding: 5%;
-    min-width: 40%;
-    max-width: 70%;
-    height: 10%;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
-    margin: 15% 0;
 }

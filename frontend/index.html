@@ -11,28 +11,28 @@
       referrerpolicy="no-referrer"
     ></script>
     <link rel="stylesheet" href="style.css" />
+    <style id="theme-styles"></style>
     <script src="index.js" defer></script>
   </head>
   <body>
     <header>
       <h1>Book Ducks</h1>
-      <nav></nav>
+      <nav>
+        <button id="openLoginBtn">Login</button>
+        <button id="openRegisterBtn">Register</button>
+      </nav>
     </header>
     <main id="main" class="main-container">
-      <div id="inlogning-container">
-        <div id="login-section">
-          <h1>Welcome</h1>
+      <div id="inlogning-container" style="display: none">
+        <div id="login-section" style="display: none">
+          <button id="closeLoginBtn">X</button>
           <h2>Login</h2>
-          <input type="text" id="loginUser" placeholder="Username of email" />
-          <input
-            type="password"
-            name=""
-            id="loginPassword"
-            placeholder="Password"
-          />
+          <input type="text" id="loginUser" placeholder="Username or email" />
+          <input type="password" id="loginPassword" placeholder="Password" />
           <button id="loginBtn">Login</button>
         </div>
-        <div id="register-section">
+        <div id="register-section" style="display: none">
+          <button id="closeRegistrBtn">X</button>
           <p>Create my account</p>
           <h2>Register</h2>
           <input type="text" id="registerUsername" placeholder="Username" />
@@ -46,18 +46,21 @@
         </div>
       </div>
 
-      <div id="users-page">
+      <div id="welcome-page" style="display: none">
         <button id="logoutBtn">Log out</button>
-        <div>
-          <ul id="bookList">
-            <h2>Our Books</h2>
-          </ul>
-        </div>
+        <button id="myListBtn" style="display: none">My List</button>
+        <h2>Our books</h2>
+        <ul id="bookList"></ul>
       </div>
 
       <div id="users-page" style="display: none">
+        <button id="backToAllBooksBtn">Back to All Books</button>
         <div id="users-bookList">
           <h3>Your Book List:</h3>
+          <select name="sorting" id="sorting-user">
+            <option value="titleSort">Sort by title</option>
+            <option value="authorSort">Sort by author</option>
+          </select>
           <ul id="userBookList"></ul>
         </div>
       </div>
