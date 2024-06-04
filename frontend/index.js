@@ -121,7 +121,7 @@ let register = async () => {
   document.querySelector("#register-section").style.display = "none";
 };
 
-// Login function
+// Login axios
 let login = async () => {
   let identifier = document.querySelector("#loginUser").value;
   let password = document.querySelector("#loginPassword").value;
@@ -165,13 +165,20 @@ loginBtn.addEventListener("click", login);
 registerBtn.addEventListener("click", register);
 logoutBtn.addEventListener("click", logout);
 myListBtn.addEventListener("click", () => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  document.querySelector("#userName").innerText = user.username; // Set user's name
   document.querySelector("#welcome-page").style.display = "none";
   document.querySelector("#users-page").style.display = "block";
+  document.querySelector("#logoutBtn").style.display = "none"; // Hide log out button
+  document.querySelector("#backToAllBooksBtn").style.display = "block"; // Show back button
   renderUserBookList();
 });
+
 backToAllBooksBtn.addEventListener("click", () => {
   document.querySelector("#users-page").style.display = "none";
   document.querySelector("#welcome-page").style.display = "block";
+  document.querySelector("#backToAllBooksBtn").style.display = "none"; // Hide back button
+  document.querySelector("#logoutBtn").style.display = "block"; // Show log out button
 });
 
 // Check login status
@@ -341,20 +348,27 @@ let renderWindow = async () => {
   if (loggedIn) {
     document.querySelector("#inlogning-container").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
+
     document.querySelector(
       "#welcome-page h2"
     ).innerText = `Welcome back here, ${
       JSON.parse(sessionStorage.getItem("user")).username
     }!`;
+
     document.querySelector("#logoutBtn").style.display = "block";
     document.querySelector("#myListBtn").style.display = "block";
-    document.querySelector("#bookList").innerHTML = "";
-    renderUserBookList();
+    document.querySelector("#openLoginBtn").style.display = "none";
+    document.querySelector("#openRegisterBtn").style.display = "none";
+    document.querySelector("#backToAllBooksBtn").style.display = "none"; // Hide back button by default
   } else {
     document.querySelector("#inlogning-container").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
+
     document.querySelector("#logoutBtn").style.display = "none";
     document.querySelector("#myListBtn").style.display = "none";
+    document.querySelector("#openLoginBtn").style.display = "block";
+    document.querySelector("#openRegisterBtn").style.display = "block";
+    document.querySelector("#backToAllBooksBtn").style.display = "none"; // Hide back button by default
     document.querySelector("#welcome-page h2").innerText = "";
   }
 };

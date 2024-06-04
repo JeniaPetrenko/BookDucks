@@ -18,8 +18,13 @@
     <header>
       <h1>Book Ducks</h1>
       <nav>
-        <button id="openLoginBtn">Login</button>
-        <button id="openRegisterBtn">Register</button>
+        <button id="openLoginBtn" style="display: none">Login</button>
+        <button id="openRegisterBtn" style="display: none">Register</button>
+        <button id="myListBtn" style="display: none">My List</button>
+        <button id="logoutBtn" style="display: none">Log out</button>
+        <button id="backToAllBooksBtn" style="display: none">
+          Back to All Books
+        </button>
       </nav>
     </header>
     <main id="main" class="main-container">
@@ -47,16 +52,13 @@
       </div>
 
       <div id="welcome-page" style="display: none">
-        <button id="logoutBtn">Log out</button>
-        <button id="myListBtn" style="display: none">My List</button>
         <h2>Our books</h2>
         <ul id="bookList"></ul>
       </div>
 
       <div id="users-page" style="display: none">
-        <button id="backToAllBooksBtn">Back to All Books</button>
         <div id="users-bookList">
-          <h3>Your Book List:</h3>
+          <h3>Your Book List, <span id="userName"></span>:</h3>
           <select name="sorting" id="sorting-user">
             <option value="titleSort">Sort by title</option>
             <option value="authorSort">Sort by author</option>
