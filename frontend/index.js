@@ -2,14 +2,13 @@ console.log("Test");
 
 const apiUrl = "http://localhost:1337/api";
 
-// Hämta färgen från Strapi och tillämpa den på webbsidan
+// Apply color theme from Strapi
 async function colorTheme() {
   try {
     const response = await axios.get(`${apiUrl}/color-theme`);
     if (response.data.data) {
       const data = response.data.data.attributes;
 
-      // Sätt bakgrund och textfärg baserat på vilken mode är aktiverad
       if (data.darkMode) {
         document.body.style.backgroundColor = "#333";
         document.body.style.color = "#fff";
@@ -28,7 +27,6 @@ async function colorTheme() {
   }
 }
 
-// Anropa funktionen för att tillämpa inställningarna från Strapi när sidan laddas
 colorTheme();
 
 // Get books from API
@@ -46,7 +44,7 @@ let getBooksData = async (url) => {
 let loadBooks = async () => {
   let booksData = await getBooksData(`${apiUrl}/books?populate=*`);
   if (booksData) {
-    document.querySelector("#bookList").innerHTML = ""; // Очищуємо список перед завантаженням нових книг
+    document.querySelector("#bookList").innerHTML = "";
     booksData.data.forEach((book) => {
       document.querySelector("#bookList").innerHTML += `<li>
                         <h3>${book.attributes.title}</h3>
@@ -59,9 +57,8 @@ let loadBooks = async () => {
                         </li>`;
     });
 
-    // Add event listeners for "Add to my List" buttons
     document.querySelectorAll(".add-to-list-btn").forEach((button) => {
-      button.addEventListener("click", addBook);
+      button.addEventListener("click", addBookToReadingList);
     });
   } else {
     document.querySelector(
@@ -70,14 +67,7 @@ let loadBooks = async () => {
   }
 };
 
-// Load books when the page loads
 loadBooks();
-
-// Load site settings from API
-let loadSiteSettings = async () => {
-  let response = await axios.get(`${apiUrl}/site-settings`);
-  return response.data.data.attributes;
-};
 
 // Inlogning
 const loginUser = document.querySelector("#loginUser");
@@ -97,7 +87,6 @@ const registerPassword = document.querySelector("#registerPassword");
 const registerBtn = document.querySelector("#registerBtn");
 const closeRegistrBtn = document.querySelector("#closeRegistrBtn");
 
-// Show/hide login and register sections
 closeLoginBtn.addEventListener("click", () => {
   document.querySelector("#inlogning-container").style.display = "none";
 });
@@ -119,7 +108,6 @@ openRegisterBtn.addEventListener("click", () => {
 let register = async () => {
   console.log("You are registered!");
 
-  // POST-request to api for registration of new user
   let response = await axios.post(`${apiUrl}/auth/local/register`, {
     username: registerUsername.value,
     email: registerUserEmail.value,
@@ -129,17 +117,16 @@ let register = async () => {
   alert("Now, you can log in!");
   console.log(response);
 
-  // Close the register section after successful registration
   document.querySelector("#inlogning-container").style.display = "none";
   document.querySelector("#register-section").style.display = "none";
 };
 
-// Login axios
+// Login function
 let login = async () => {
   let identifier = document.querySelector("#loginUser").value;
   let password = document.querySelector("#loginPassword").value;
 
-  let response = await axios.post("http://localhost:1337/api/auth/local", {
+  let response = await axios.post(`${apiUrl}/auth/local`, {
     identifier: identifier,
     password: password,
   });
@@ -148,21 +135,30 @@ let login = async () => {
   sessionStorage.setItem("token", response.data.jwt);
   sessionStorage.setItem("user", JSON.stringify(response.data.user));
 
+  // Fetch and set user reading list after login
+  let loggedInUser = await axios.get(`${apiUrl}/users/me?populate=deep,3`, {
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    },
+  });
+
+  let user = response.data.user;
+  user.readingList = loggedInUser.data.books.map((book) => book.id);
+  sessionStorage.setItem("user", JSON.stringify(user));
+
   alert("You're logged in");
 
-  // Close the login section after successful login
   document.querySelector("#inlogning-container").style.display = "none";
   document.querySelector("#login-section").style.display = "none";
 
-  await renderWindow();
-  await loadBooks(); // Додаємо виклик функції для завантаження всіх книг після логіна
+  renderWindow();
+  loadBooks();
 };
 
-// Logout button
+// Logout function
 let logout = async () => {
   sessionStorage.clear();
-  await renderWindow();
-  await loadBooks(); // Додаємо виклик функції для завантаження всіх книг після виходу
+  renderWindow();
 };
 
 loginBtn.addEventListener("click", login);
@@ -180,25 +176,26 @@ backToAllBooksBtn.addEventListener("click", () => {
 
 // Check login status
 let checkIfLogged = async () => {
-  //return sessionStorage.getItem("token") ? true : false;
-  let status;
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    return false;
+  }
+
   try {
     await axios.get(`${apiUrl}/users/me`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
-    status = true;
+    return true;
   } catch (error) {
     console.log(error);
-    status = false;
-  } finally {
-    return status;
+    return false;
   }
 };
 
-// Function to add the book to the user's list or show alert if not logged in
-const addBook = async (event) => {
+// Add book to the user's list or show alert if not logged in
+const addBookToReadingList = async (event) => {
   if (!(await checkIfLogged())) {
     showAlert();
     return;
@@ -214,6 +211,8 @@ const addBook = async (event) => {
     user.readingList.push(bookId);
     sessionStorage.setItem("user", JSON.stringify(user));
     alert("Book added to your reading list!");
+
+    await updateUserReadingList(user);
   } else {
     alert("Book is already in your reading list!");
   }
@@ -221,51 +220,118 @@ const addBook = async (event) => {
   renderUserBookList();
 };
 
-// Function to show an alert if the user is not logged in
+// Update user's reading list in the backend
+let updateUserReadingList = async (user) => {
+  try {
+    await axios.put(
+      `${apiUrl}/users/${user.id}`,
+      {
+        books: user.readingList,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error updating reading list in the backend:", error);
+  }
+};
+
+// Show an alert if the user is not logged in
 const showAlert = () => {
   alert("You need to be registered or logged in!");
 };
 
-// Function to render user's book list
-let renderUserBookList = async () => {
-  let user = JSON.parse(sessionStorage.getItem("user"));
-  console.log(user, "logged in");
+// Sort the user's book list
+let sortUserBookList = (books, criterion) => {
+  return books.sort((a, b) => {
+    if (a[criterion] < b[criterion]) {
+      return -1;
+    }
+    if (a[criterion] > b[criterion]) {
+      return 1;
+    }
+    return 0;
+  });
+};
 
-  if (user && user.readingList) {
-    let userBookList = document.querySelector("#userBookList");
-    userBookList.innerHTML = "";
-
-    for (let bookId of user.readingList) {
-      let bookData = await getBooksData(`${apiUrl}/books/${bookId}?populate=*`);
-      let book = bookData.data;
-
-      console.log(bookData);
-      userBookList.innerHTML += `<li>
-                               <h3>${book.attributes.title}</h3>
-                               <p>Author: ${book.attributes.author}</p>
-                               <p>Pages: ${book.attributes.pages}</p>
-                               <p>Published: ${book.attributes.published_date}</p>
-                               <p>Price: ${book.attributes.price} kr</p>
-                               <p><img width="100" height="150" src="http://localhost:1337${book.attributes.cover.data[0].attributes.url}" alt="${book.attributes.title} cover"></p>
-                               <button class="remove-from-list-btn" data-id="${book.id}">Remove</button>
-                             </li>`;
+// Render user's book list
+let renderUserBookList = async (sortCriterion = "title") => {
+  try {
+    let user = JSON.parse(sessionStorage.getItem("user"));
+    if (!user) {
+      console.error("No user found in session storage");
+      return;
     }
 
-    // Add event listeners for "Remove" buttons
-    document.querySelectorAll(".remove-from-list-btn").forEach((button) => {
-      button.addEventListener("click", removeFromReadingList);
+    console.log(user.username, "logged in");
+
+    let userBookListElement = document.querySelector("#userBookList");
+    if (!userBookListElement) {
+      console.error("#userBookList element not found in the DOM");
+      return;
+    }
+
+    let response = await axios.get(`${apiUrl}/users/me?populate=deep,3`, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
     });
+
+    let loggedInUser = response.data;
+    console.log(loggedInUser, "Logged In User Data");
+
+    if (loggedInUser && loggedInUser.books && loggedInUser.books.length > 0) {
+      userBookListElement.innerHTML = "";
+
+      let sortedBooks = sortUserBookList(loggedInUser.books, sortCriterion);
+
+      for (let book of sortedBooks) {
+        let bookData = await getBooksData(
+          `${apiUrl}/books/${book.id}?populate=*`
+        );
+        let bookDetails = bookData.data;
+
+        console.log(bookData);
+        userBookListElement.innerHTML += `<li>
+                                 <h3>${bookDetails.attributes.title}</h3>
+                                 <p>Author: ${bookDetails.attributes.author}</p>
+                                 <p>Pages: ${bookDetails.attributes.pages}</p>
+                                 <p>Published: ${bookDetails.attributes.published_date}</p>
+                                 <p>Price: ${bookDetails.attributes.price} kr</p>
+                                 <p><img width="100" height="150" src="http://localhost:1337${bookDetails.attributes.cover.data[0].attributes.url}" alt="${bookDetails.attributes.title} cover"></p>
+                                 <button class="remove-from-list-btn" data-id="${bookDetails.id}">Remove</button>
+                               </li>`;
+      }
+
+      document.querySelectorAll(".remove-from-list-btn").forEach((button) => {
+        button.addEventListener("click", removeFromReadingList);
+      });
+    } else {
+      userBookListElement.innerHTML =
+        "<li>No books found in your reading list.</li>";
+    }
+  } catch (error) {
+    console.error("Error rendering user book list:", error);
   }
 };
 
-// Function to remove book from user's reading list
-let removeFromReadingList = (event) => {
+// Add event listener for sorting
+document.querySelector("#sorting-user").addEventListener("change", (event) => {
+  renderUserBookList(event.target.value);
+});
+
+// Remove book from user's reading list
+let removeFromReadingList = async (event) => {
   let bookId = event.target.getAttribute("data-id");
   let user = JSON.parse(sessionStorage.getItem("user"));
 
   user.readingList = user.readingList.filter((id) => id != bookId);
   sessionStorage.setItem("user", JSON.stringify(user));
 
+  await updateUserReadingList(user);
   renderUserBookList();
 };
 
@@ -275,7 +341,6 @@ let renderWindow = async () => {
   if (loggedIn) {
     document.querySelector("#inlogning-container").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
-    // Встановлюємо текст тільки для залогінених користувачів
     document.querySelector(
       "#welcome-page h2"
     ).innerText = `Welcome back here, ${
@@ -283,19 +348,16 @@ let renderWindow = async () => {
     }!`;
     document.querySelector("#logoutBtn").style.display = "block";
     document.querySelector("#myListBtn").style.display = "block";
-    // Очищаємо список книг перед завантаженням книг зі списку користувача
     document.querySelector("#bookList").innerHTML = "";
-    // Завантажуємо книги зі списку користувача
     renderUserBookList();
   } else {
     document.querySelector("#inlogning-container").style.display = "none";
     document.querySelector("#welcome-page").style.display = "block";
     document.querySelector("#logoutBtn").style.display = "none";
     document.querySelector("#myListBtn").style.display = "none";
-    // Очищаємо текст при виході з системи
     document.querySelector("#welcome-page h2").innerText = "";
   }
 };
 
 renderWindow();
-loadBooks(); // Додаємо виклик функції для завантаження всіх книг при першому завантаженні сторінки
+loadBooks();
