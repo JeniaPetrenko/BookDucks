@@ -1,13 +1,21 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
+    background: #f4f4f9;
+    color: #333;
+    margin: 0;
 }
 
 header {
-    background-color: #413f3f;
-    color: #fff;
-    padding: 1em;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 1em 0;
     text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 nav {
@@ -22,6 +30,11 @@ nav {
     flex-direction: column;
     align-items: center;
     padding: 2em;
+    margin-top: 150px;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #welcome-page {
@@ -42,26 +55,59 @@ ul {
     margin: 10px;
     display: flex;
     flex-wrap: wrap;
-
-
+    justify-content: center;
 }
-
-
 
 li {
-    margin: 1em 0;
+    margin: 1em;
     padding: 1em;
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
     max-width: 200px;
-    max-height: 400px;
-    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
+li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
 
+li img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 1em;
+}
 
+li h3 {
+    font-size: 1.2em;
+    margin: 0.5em 0;
+}
 
-/* Add this to your existing CSS file or a new one */
+li p {
+    font-size: 0.9em;
+    margin: 0.2em 0;
+    text-align: center;
+}
+
+li button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    margin-top: 1em;
+    transition: background 0.2s, transform 0.2s;
+}
+
+li button:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
 
 .close {
     position: absolute;
@@ -73,75 +119,75 @@ li {
 }
 
 #inlogning-container {
-    background-color: rgb(61, 50, 50);
-
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #login-section,
 #register-section {
-    background: rgba(198, 126, 126, 0.985);
-    border: 0.5px solid gray;
+    background: #ecf0f1;
     border-radius: 20px;
-    padding: 5px;
+    padding: 20px;
     margin: 10px;
-    width: 250px;
-    height: 300px;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    height: auto;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
 }
 
-
-
-
 h1 {
-    margin: 5px;
+    margin: 0;
     font-weight: 300;
 }
 
 h2 {
     text-align: center;
+    font-weight: 400;
 }
 
 input {
-    width: 60%;
-    height: 30px;
+    width: 80%;
+    height: 40px;
     margin: 10px 0;
-    border-radius: 15px;
-    text-align: center;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    padding: 0 10px;
 }
-
-
 
 #login {
-    border-bottom: 2px solid rgb(26, 6, 6);
+    border-bottom: 2px solid #1a0606;
 }
 
-#logoutBtn,
-#myListBtn {
-    background: lightgray;
-    width: 50%;
-    height: 40px;
-    border: none;
-    border-radius: 99px;
-    margin: 20px 0;
-}
-
-#userPageBtn,
-#loginBtn,
-#registerBtn,
-#backToAllBooksBtn {
-    background: lightgray;
+button {
+    background: #3498db;
+    color: white;
     width: 70%;
     height: 40px;
     border: none;
-    border-radius: 99px;
+    border-radius: 20px;
     margin: 20px 0;
+    transition: background 0.2s, transform 0.2s;
 }
 
-#loginBtn:hover,
-#registerBtn:hover,
-#logoutBtn:hover,
-#myListBtn:hover {
-    background: rgb(66, 61, 61);
-    color: white;
+button:hover {
+    background: #2980b9;
+    transform: scale(1.05);
     cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+#logoutBtn,
+#myListBtn,
+#backToAllBooksBtn {
+    display: none;
 }
