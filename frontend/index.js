@@ -321,7 +321,9 @@ let renderUserBookList = async (sort = true) => {
                                  <p>Pages: ${book.pages}</p>
                                  <p>Published: ${book.published_date}</p>
                                  <p>Price: ${book.price} kr</p>
-                                 <p><img width="100" height="150" src="${coverUrl}" alt="${book.title} cover"></p>
+                                   <div class="cover-container">
+                                   <img src="${coverUrl}" alt="${book.title} cover">
+                                     </div>
                                  <button class="remove-from-list-btn" data-id="${book.id}">Remove</button>
                                </li>`;
       }
