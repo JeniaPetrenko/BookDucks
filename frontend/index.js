@@ -56,8 +56,10 @@ let loadBooks = async () => {
                         <p>Price: ${book.attributes.price} kr</p>
                         <p>Pages: ${book.attributes.pages}</p>
                         <p>Published: ${book.attributes.published_date}</p>
-                        <img width="100" height="150" src="${coverUrl}" alt="${book.attributes.title} cover">
-                        <button class="add-to-list-btn" data-id="${book.id}">Add to my List</button>
+                        <div class="cover-container">
+                        <img src="http://localhost:1337${book.attributes.cover.data[0].attributes.url}" alt="${book.attributes.title} cover">
+                            </div>
+                            <button class="add-to-list-btn" data-id="${book.id}">Add to my List</button>
                         </li>`;
     });
 
