@@ -46,13 +46,17 @@ let loadBooks = async () => {
   if (booksData) {
     document.querySelector("#bookList").innerHTML = "";
     booksData.data.forEach((book) => {
+      const coverUrl = book.attributes.cover?.data?.length
+        ? `http://localhost:1337${book.attributes.cover.data[0].attributes.url}`
+        : "http://localhost:1337/uploads/default_cover.jpg";
+
       document.querySelector("#bookList").innerHTML += `<li>
                         <h3>${book.attributes.title}</h3>
                         <p>Author: ${book.attributes.author}</p>
                         <p>Price: ${book.attributes.price} kr</p>
                         <p>Pages: ${book.attributes.pages}</p>
                         <p>Published: ${book.attributes.published_date}</p>
-                        <img width="100" height="150" src="http://localhost:1337${book.attributes.cover.data[0].attributes.url}" alt="${book.attributes.title} cover">
+                        <img width="100" height="150" src="${coverUrl}" alt="${book.attributes.title} cover">
                         <button class="add-to-list-btn" data-id="${book.id}">Add to my List</button>
                         </li>`;
     });
@@ -230,10 +234,11 @@ const addBookToReadingList = async (event) => {
 // Update user's reading list in the backend
 let updateUserReadingList = async (user) => {
   try {
+    console.log("Updating reading list for user:", user.id, user.readingList);
     await axios.put(
       `${apiUrl}/users/${user.id}`,
       {
-        books: user.readingList,
+        books: user.readingList.map((id) => ({ id })),
       },
       {
         headers: {
@@ -296,20 +301,18 @@ let renderUserBookList = async (sortCriterion = "title") => {
       let sortedBooks = sortUserBookList(loggedInUser.books, sortCriterion);
 
       for (let book of sortedBooks) {
-        let bookData = await getBooksData(
-          `${apiUrl}/books/${book.id}?populate=*`
-        );
-        let bookDetails = bookData.data;
+        const coverUrl = book.cover?.length
+          ? `http://localhost:1337${book.cover[0].url}`
+          : "http://localhost:1337/uploads/default_cover.jpg";
 
-        console.log(bookData);
         userBookListElement.innerHTML += `<li>
-                                 <h3>${bookDetails.attributes.title}</h3>
-                                 <p>Author: ${bookDetails.attributes.author}</p>
-                                 <p>Pages: ${bookDetails.attributes.pages}</p>
-                                 <p>Published: ${bookDetails.attributes.published_date}</p>
-                                 <p>Price: ${bookDetails.attributes.price} kr</p>
-                                 <p><img width="100" height="150" src="http://localhost:1337${bookDetails.attributes.cover.data[0].attributes.url}" alt="${bookDetails.attributes.title} cover"></p>
-                                 <button class="remove-from-list-btn" data-id="${bookDetails.id}">Remove</button>
+                                 <h3>${book.title}</h3>
+                                 <p>Author: ${book.author}</p>
+                                 <p>Pages: ${book.pages}</p>
+                                 <p>Published: ${book.published_date}</p>
+                                 <p>Price: ${book.price} kr</p>
+                                 <p><img width="100" height="150" src="${coverUrl}" alt="${book.title} cover"></p>
+                                 <button class="remove-from-list-btn" data-id="${book.id}">Remove</button>
                                </li>`;
       }
 
