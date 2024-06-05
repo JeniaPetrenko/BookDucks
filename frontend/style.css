@@ -6,6 +6,38 @@ body {
     margin: 0;
 }
 
+body.dark-mode {
+    background-color: #828080;
+    color: #fff;
+}
+
+body.dark-mode li {
+    background-color: #4c4b4b;
+    color: #fff;
+}
+
+body.light-mode {
+    background-color: #fff;
+    color: #000;
+}
+
+body.light-mode li {
+    background-color: #fff;
+    color: #000;
+}
+
+body.color-mode {
+    background-color: #76e0f5;
+    color: #333;
+}
+
+body.color-mode li {
+    background-color: #c0eff9;
+    color: #333;
+}
+
+
+
 header {
     background-color: #2c3e50;
     color: #ecf0f1;
@@ -22,6 +54,22 @@ nav {
     display: flex;
     justify-content: center;
     gap: 1em;
+}
+
+nav button {
+    background: #3498db;
+    color: white;
+    width: 70%;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    margin: 20px 0;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+
 }
 
 #main {
@@ -71,9 +119,7 @@ li {
     align-items: center;
     transition: transform 0.2s, box-shadow 0.2s;
     min-height: 400px;
-    /* Встановлюємо мінімальну висоту для вирівнювання */
     justify-content: space-between;
-    /* Вирівнювання простору між елементами */
 }
 
 li:hover {
@@ -108,7 +154,6 @@ li p {
     margin: 0.2em 0;
     text-align: center;
     flex: 1;
-    /* Додаємо flex: 1 для рівномірного вирівнювання тексту */
 }
 
 li button {
@@ -145,7 +190,9 @@ li button:hover {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 150px;
+    z-index: 2000;
 }
 
 #login-section,
@@ -153,11 +200,12 @@ li button:hover {
     background: #ecf0f1;
     border-radius: 20px;
     padding: 20px;
-    margin: 10px;
+    margin: auto;
     width: 300px;
     height: auto;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
+    position: relative;
 }
 
 h1 {
@@ -192,6 +240,7 @@ button {
     border-radius: 20px;
     margin: 20px 0;
     transition: background 0.2s, transform 0.2s;
+
 }
 
 button:hover {

@@ -10,14 +10,17 @@ async function colorTheme() {
       const data = response.data.data.attributes;
 
       if (data.darkMode) {
-        document.body.style.backgroundColor = "#333";
-        document.body.style.color = "#fff";
+        document.body.classList.add("dark-mode");
+        document.body.classList.remove("light-mode");
+        document.body.classList.remove("color-mode");
       } else if (data.lightMode) {
-        document.body.style.backgroundColor = "#fff";
-        document.body.style.color = "#000";
+        document.body.classList.add("light-mode");
+        document.body.classList.remove("dark-mode");
+        document.body.classList.remove("color-mode");
       } else if (data.colorMode) {
-        document.body.style.backgroundColor = "#76e0f5";
-        document.body.style.color = "#333";
+        document.body.classList.add("color-mode");
+        document.body.classList.remove("dark-mode");
+        document.body.classList.remove("light-mode");
       }
     } else {
       console.error("No theme data found");
