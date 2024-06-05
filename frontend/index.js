@@ -4,15 +4,12 @@ console.log("Test");
 const apiUrl = "http://localhost:1337/api";
 
 // Function to apply the color theme from Strapi.
-//This asynchronous function fetches the color theme settings from the Strapi
 // API and applies them to the document body.
 async function colorTheme() {
   try {
     // Fetch the color theme data from the API
     const response = await axios.get(`${apiUrl}/color-theme`);
 
-    // Check if the response contains data
-    //Depending on the theme (darkMode, lightMode, or colorMode), the corresponding class is added to the document body while removing the other classes.
     if (response.data.data) {
       const data = response.data.data.attributes;
 
@@ -39,22 +36,16 @@ async function colorTheme() {
       console.error("No theme data found");
     }
   } catch (error) {
-    // Log an error if the request fails
     console.error("Error fetching theme from Strapi:", error);
   }
 }
-// Invoke the color theme function to apply the theme on page load
 colorTheme();
 
-// Get books from API
 // Function to fetch books data from a given URL
-//Declares an asynchronous function named getBooksData that takes a url parameter.
-
 let getBooksData = async (url) => {
-  //The try-catch block is used for error handling. If any errors occur within the try block, they will be caught and handled in the catch block.
+  //The try-catch block is used for error handling.
   try {
     // Send a GET request to the provided URL using Axios
-    //The await keyword is used to wait for the response from the API before continuing with the rest of
     let response = await axios.get(url);
 
     // Return the data from the response
@@ -63,21 +54,18 @@ let getBooksData = async (url) => {
     // Log an error message if the request fails
     console.error("Error fetching books data:", error);
 
-    // Return null if an error occurs
     return null;
   }
 };
 
 // Load books and display on the page
 let loadBooks = async () => {
-  // Fetch books data from the API
   let booksData = await getBooksData(`${apiUrl}/books?populate=*`);
   if (booksData) {
     // Clear the list of books before appending new books to it
     document.querySelector("#bookList").innerHTML = "";
     // Loop through the books data and append each book to the list of books
     booksData.data.forEach((book) => {
-      // Get the cover image URL from the book data
       const coverUrl = book.attributes.cover?.data?.length
         ? `http://localhost:1337${book.attributes.cover.data[0].attributes.url}`
         : "http://localhost:1337/uploads/default_cover.jpg";
@@ -95,12 +83,10 @@ let loadBooks = async () => {
                             <button class="add-to-list-btn" data-id="${book.id}">Add to my List</button>
                         </li>`;
     });
-    // Listen for clicks on the "Add to my List" buttons
     document.querySelectorAll(".add-to-list-btn").forEach((button) => {
       button.addEventListener("click", addBookToReadingList);
     });
   } else {
-    // Display an error message if no books data is found
     document.querySelector(
       "#bookList"
     ).innerHTML = `<li>Error loading books.</li>`;
@@ -147,24 +133,17 @@ openRegisterBtn.addEventListener("click", () => {
   document.querySelector("#register-section").style.display = "block";
 });
 
-//
-// Asynchronous function to handle user registration
+//  handle user registration
 let register = async () => {
-  // Log a message to the console indicating the registration process
   console.log("You are registered!");
 
-  // Send a POST request to the registration endpoint using Axios
   let response = await axios.post(`${apiUrl}/auth/local/register`, {
-    // Pass the user input values for username, email, and password in the request body
     username: registerUsername.value,
     email: registerUserEmail.value,
     password: registerPassword.value,
   });
 
-  // Alert the user that they can now log in
   alert("Now, you can log in!");
-
-  // Log the response from the server to the console
   console.log(response);
 
   // Hide the registration form and the container
@@ -173,20 +152,17 @@ let register = async () => {
 };
 
 // Login axios
-// Asynchronous function to handle user login
+// handle user login
 let login = async () => {
-  // Get the user input values for identifier (username/email) and password
   let identifier = document.querySelector("#loginUser").value;
   let password = document.querySelector("#loginPassword").value;
 
   // Send a POST request to the login endpoint using Axios
   let response = await axios.post(`${apiUrl}/auth/local`, {
-    // Pass the user input values for identifier and password in the request body
     identifier: identifier,
     password: password,
   });
 
-  // Log the response data from the server to the console
   console.log(response.data);
 
   // Store the JWT token and user data in session storage
@@ -195,7 +171,6 @@ let login = async () => {
 
   // Fetch and set user reading list after login
   let loggedInUser = await axios.get(`${apiUrl}/users/me?populate=deep,3`, {
-    // Pass the JWT token in the Authorization header
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem("token")}`,
     },
@@ -206,14 +181,12 @@ let login = async () => {
   user.readingList = loggedInUser.data.books.map((book) => book.id);
   sessionStorage.setItem("user", JSON.stringify(user));
 
-  // Alert the user that they are logged in
   alert("You're logged in");
 
   // Hide the login container and section from view
   document.querySelector("#inlogning-container").style.display = "none";
   document.querySelector("#login-section").style.display = "none";
 
-  // Call functions to render the window and load books
   renderWindow();
   loadBooks();
 };
@@ -253,7 +226,7 @@ let checkIfLogged = async () => {
   }
 
   try {
-    // Send a GET request to the /users/me endpoint with the token in the Authorization header
+    // Send a GET request to the /users/me
     await axios.get(`${apiUrl}/users/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -305,7 +278,6 @@ let updateUserReadingList = async (user) => {
   // Get the user data from session storage
   try {
     console.log("Updating reading list for user:", user.id, user.readingList);
-    // Send a PUT request to the /users/:id endpoint with the user's reading list in the request body and the token in the Authorization header
     await axios.put(
       `${apiUrl}/users/${user.id}`,
       {
@@ -322,14 +294,12 @@ let updateUserReadingList = async (user) => {
   }
 };
 
-// Show an alert if the user is not logged in
 const showAlert = () => {
   alert("You need to be registered or logged in!");
 };
 
 // Sort the user's book list
 let sortUserBookList = (books, criterion) => {
-  // Sort the books based on the given criterion
   return books.sort((a, b) => {
     if (a[criterion] < b[criterion]) {
       return -1;
@@ -347,7 +317,6 @@ let renderUserBookList = async (sort = true) => {
   try {
     let user = JSON.parse(sessionStorage.getItem("user"));
     if (!user) {
-      // If there is no user data in session storage, return
       console.error("No user found in session storage");
       return;
     }
@@ -356,13 +325,11 @@ let renderUserBookList = async (sort = true) => {
 
     // Get the user's reading list from the user data
     let userBookListElement = document.querySelector("#userBookList");
-    // Check if the #userBookList element exists in the DOM
     if (!userBookListElement) {
       console.error("#userBookList element not found in the DOM");
       return;
     }
 
-    // Send a GET request to the /users/me endpoint with the token in the Authorization header
     let response = await axios.get(`${apiUrl}/users/me?populate=deep,3`, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -375,12 +342,9 @@ let renderUserBookList = async (sort = true) => {
 
     // Check if the user has a readingList property
     if (loggedInUser && loggedInUser.books && loggedInUser.books.length > 0) {
-      // Get the user's reading list from the user data
       userBookListElement.innerHTML = "";
 
-      // Get the user's reading list from the user data
       let books = loggedInUser.books;
-      // Sort the books based on the given criterion
       if (sort) {
         const sortCriterion = document.querySelector("#sorting-user").value;
         const sortField = sortCriterion === "titleSort" ? "title" : "author";
@@ -412,8 +376,6 @@ let renderUserBookList = async (sort = true) => {
         button.addEventListener("click", removeFromReadingList);
       });
     } else {
-      // If the user has no books in their reading list,
-      //display a message in the #userBookList element in the DOM
       userBookListElement.innerHTML =
         "<li>No books found in your reading list.</li>";
     }
@@ -422,7 +384,6 @@ let renderUserBookList = async (sort = true) => {
   }
 };
 
-// Add event listener for sorting
 document.querySelector("#sorting-user").addEventListener("change", () => {
   renderUserBookList();
 });
