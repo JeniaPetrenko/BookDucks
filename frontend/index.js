@@ -228,7 +228,7 @@ const addBookToReadingList = async (event) => {
     alert("Book is already in your reading list!");
   }
 
-  renderUserBookList();
+  renderUserBookList(false);
 };
 
 // Update user's reading list in the backend
@@ -270,7 +270,7 @@ let sortUserBookList = (books, criterion) => {
 };
 
 // Render user's book list
-let renderUserBookList = async (sortCriterion = "title") => {
+let renderUserBookList = async (sort = true) => {
   try {
     let user = JSON.parse(sessionStorage.getItem("user"));
     if (!user) {
@@ -298,9 +298,14 @@ let renderUserBookList = async (sortCriterion = "title") => {
     if (loggedInUser && loggedInUser.books && loggedInUser.books.length > 0) {
       userBookListElement.innerHTML = "";
 
-      let sortedBooks = sortUserBookList(loggedInUser.books, sortCriterion);
+      let books = loggedInUser.books;
+      if (sort) {
+        const sortCriterion = document.querySelector("#sorting-user").value;
+        const sortField = sortCriterion === "titleSort" ? "title" : "author";
+        books = sortUserBookList(books, sortField);
+      }
 
-      for (let book of sortedBooks) {
+      for (let book of books) {
         const coverUrl = book.cover?.length
           ? `http://localhost:1337${book.cover[0].url}`
           : "http://localhost:1337/uploads/default_cover.jpg";
@@ -329,8 +334,8 @@ let renderUserBookList = async (sortCriterion = "title") => {
 };
 
 // Add event listener for sorting
-document.querySelector("#sorting-user").addEventListener("change", (event) => {
-  renderUserBookList(event.target.value);
+document.querySelector("#sorting-user").addEventListener("change", () => {
+  renderUserBookList();
 });
 
 // Remove book from user's reading list
@@ -342,7 +347,7 @@ let removeFromReadingList = async (event) => {
   sessionStorage.setItem("user", JSON.stringify(user));
 
   await updateUserReadingList(user);
-  renderUserBookList();
+  renderUserBookList(false);
 };
 
 // Render the window based on login status
